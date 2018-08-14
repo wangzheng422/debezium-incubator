@@ -39,7 +39,7 @@ In order to build the Debezium Oracle connector, the following prerequisites mus
   -DartifactId=ojdbc8 \
   -Dversion=12.1.0.2 \
   -Dpackaging=jar \
-  -Dfile=ojdbc8.jar`
+  -Dfile=ojdbc8.jar
   * mvn install:install-file \
   -DgroupId=com.oracle.instantclient \
   -DartifactId=xstreams \
