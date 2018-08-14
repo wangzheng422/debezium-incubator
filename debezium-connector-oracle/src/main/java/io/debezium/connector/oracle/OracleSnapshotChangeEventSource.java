@@ -208,16 +208,12 @@ public class OracleSnapshotChangeEventSource extends HistorizedRelationalSnapsho
 
     @Override
     protected SchemaChangeEvent getCreateTableEvent(SnapshotContext snapshotContext, Table table) throws SQLException {
-        try (Statement statement = jdbcConnection.connection().createStatement()) {
-                ResultSet rs = null;
-                if ( table.id().schema() == null ) {
-                    LOGGER.debug("table.id().schema() is null");
-                    rs = statement.executeQuery("select dbms_metadata.get_ddl( 'TABLE', '" + table.id().table() + "', '" +  "schema null " + "' ) from dual");
-                }
-                else {
-                    rs = statement.executeQuery("select dbms_metadata.get_ddl( 'TABLE', '" + table.id().table() + "', '" +  table.id().schema() + "' ) from dual");
-                }
-                
+        if ( table == null ) {
+            throw new IllegalStateException("table is null");
+        }
+
+        try (Statement statement = jdbcConnection.connection().createStatement();
+            ResultSet rs =  statement.executeQuery("select dbms_metadata.get_ddl( 'TABLE', '" + table.id().table() + "', '" +  table.id().schema() + "' ) from dual");) {
 
             if (!rs.next()) {
                 throw new IllegalStateException("Couldn't get metadata");
