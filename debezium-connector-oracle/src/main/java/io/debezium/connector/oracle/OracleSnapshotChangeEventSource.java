@@ -129,6 +129,8 @@ public class OracleSnapshotChangeEventSource extends HistorizedRelationalSnapsho
         try(Statement statement = jdbcConnection.connection().createStatement();
                 ResultSet rs = statement.executeQuery("select CURRENT_SCN from V$DATABASE")) {
 
+            LOGGER.warn("select CURRENT_SCN from V$DATABASE");
+
             if (!rs.next()) {
                 throw new IllegalStateException("Couldn't get SCN");
             }
@@ -147,6 +149,8 @@ public class OracleSnapshotChangeEventSource extends HistorizedRelationalSnapsho
 
         try(Statement statement = jdbcConnection.connection().createStatement();
                 ResultSet rs = statement.executeQuery("SELECT 1 FROM DUAL WHERE SCN_TO_TIMESTAMP(" + scn1 + ") = SCN_TO_TIMESTAMP(" + scn2 + ")" )) {
+
+                    LOGGER.warn("SELECT 1 FROM DUAL WHERE SCN_TO_TIMESTAMP(" + scn1 + ") = SCN_TO_TIMESTAMP(" + scn2 + ")" );
 
             return rs.next();
         }
@@ -170,6 +174,9 @@ public class OracleSnapshotChangeEventSource extends HistorizedRelationalSnapsho
         }
 
         String query = lastDdlScnQuery.substring(0, lastDdlScnQuery.length() - 3).toString();
+
+        LOGGER.warn(query);
+
         try(Statement statement = jdbcConnection.connection().createStatement();
                 ResultSet rs = statement.executeQuery(query)) {
 
@@ -215,6 +222,8 @@ public class OracleSnapshotChangeEventSource extends HistorizedRelationalSnapsho
         try (Statement statement = jdbcConnection.connection().createStatement();
             ResultSet rs =  statement.executeQuery("select dbms_metadata.get_ddl( 'TABLE', '" + table.id().table() + "', '" +  table.id().schema() + "' ) from dual");) {
 
+                LOGGER.warn("select dbms_metadata.get_ddl( 'TABLE', '" + table.id().table() + "', '" +  table.id().schema() + "' ) from dual");
+
             if (!rs.next()) {
                 throw new IllegalStateException("Couldn't get metadata");
             }
@@ -230,6 +239,7 @@ public class OracleSnapshotChangeEventSource extends HistorizedRelationalSnapsho
     @Override
     protected String getSnapshotSelect(SnapshotContext snapshotContext, TableId tableId) {
         long snapshotOffset = (Long) snapshotContext.offset.getOffset().get("scn");
+        LOGGER.warn("SELECT * FROM " + tableId.schema() + "." + tableId.table() + " AS OF SCN " + snapshotOffset);
         return "SELECT * FROM " + tableId.schema() + "." + tableId.table() + " AS OF SCN " + snapshotOffset;
     }
 
