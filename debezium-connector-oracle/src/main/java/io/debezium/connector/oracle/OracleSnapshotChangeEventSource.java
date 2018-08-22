@@ -219,10 +219,12 @@ public class OracleSnapshotChangeEventSource extends HistorizedRelationalSnapsho
             throw new IllegalStateException("table is null");
         }
 
-        try (Statement statement = jdbcConnection.connection().createStatement();
-            ResultSet rs =  statement.executeQuery("select dbms_metadata.get_ddl( 'TABLE', '" + table.id().table() + "', '" +  table.id().schema() + "' ) from dual");) {
+        LOGGER.warn("select dbms_metadata.get_ddl( 'TABLE', '" + table.id().table() + "', '" +  table.id().schema() + "' ) from USER_TABLES");
 
-                LOGGER.warn("select dbms_metadata.get_ddl( 'TABLE', '" + table.id().table() + "', '" +  table.id().schema() + "' ) from dual");
+
+        try (Statement statement = jdbcConnection.connection().createStatement();
+            ResultSet rs =  statement.executeQuery("select dbms_metadata.get_ddl( 'TABLE', '" + table.id().table() + "', '" +  table.id().schema() + "' ) from USER_TABLES");) {
+
 
             if (!rs.next()) {
                 throw new IllegalStateException("Couldn't get metadata");
