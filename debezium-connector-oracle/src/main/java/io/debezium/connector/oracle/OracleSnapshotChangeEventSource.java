@@ -226,9 +226,9 @@ public class OracleSnapshotChangeEventSource extends HistorizedRelationalSnapsho
             ResultSet rs =  statement.executeQuery("select dbms_metadata.get_ddl( 'TABLE', '" + table.id().table() + "', '" +  table.id().schema() + "' ) from USER_TABLES");) {
 
 
-            // if (!rs.next()) {
-            //     throw new IllegalStateException("Couldn't get metadata");
-            // }
+            if (!rs.next()) {
+                throw new IllegalStateException("Couldn't get metadata");
+            }
 
             Object res = rs.getObject(1);
             String ddl = ((Clob)res).getSubString(1, (int) ((Clob)res).length());
