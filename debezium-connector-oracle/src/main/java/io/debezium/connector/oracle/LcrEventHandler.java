@@ -95,7 +95,7 @@ class LcrEventHandler implements XStreamLCRCallbackHandler {
             return;
         }
 
-        TableId tableId = getTableId(lcr).toLowercase();
+        TableId tableId = getTableId(lcr);
 
         dispatcher.dispatchDataChangeEvent(
                 tableId,
@@ -117,7 +117,7 @@ class LcrEventHandler implements XStreamLCRCallbackHandler {
     }
 
     private TableId getTableId(LCR lcr) {
-        return new TableId(lcr.getSourceDatabaseName(), lcr.getObjectOwner(), lcr.getObjectName());
+        return new TableId(lcr.getSourceDatabaseName().toLowerCase(), lcr.getObjectOwner(), lcr.getObjectName().toLowerCase());
     }
 
     @Override
