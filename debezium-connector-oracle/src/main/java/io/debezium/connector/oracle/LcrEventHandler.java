@@ -95,7 +95,7 @@ class LcrEventHandler implements XStreamLCRCallbackHandler {
             return;
         }
 
-        TableId tableId = getTableId(lcr);
+        TableId tableId = getTableId(lcr).toLowercase();
 
         dispatcher.dispatchDataChangeEvent(
                 tableId,
