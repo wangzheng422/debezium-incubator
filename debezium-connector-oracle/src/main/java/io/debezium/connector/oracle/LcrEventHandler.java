@@ -106,9 +106,9 @@ class LcrEventHandler implements XStreamLCRCallbackHandler {
     }
 
     private void dispatchSchemaChangeEvent(DDLLCR ddlLcr) throws InterruptedException {
-        if (LOGGER.isDebugEnabled()) {
+        // if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Processing DDL event {}", ddlLcr.getDDLText());
-        }
+        // }
 
         TableId tableId = getTableId(ddlLcr);
 
