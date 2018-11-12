@@ -53,10 +53,21 @@ class LcrEventHandler implements XStreamLCRCallbackHandler {
         long scn = convertPositionToScn(lcr.getPosition());
 
         // After a restart it may happen we get the event with the last processed SCN again
-        if (scn <= offsetContext.getScn()) {
-            LOGGER.debug("Ignoring change event with already processed SCN {}", scn);
-            return;
+        if (scn >= 0) {
+            if (scn <= offsetContext.getScn()) {
+                LOGGER.debug("Ignoring change event with already processed SCN {}", scn);
+                LOGGER.debug("Ignoring change event with already processed, original SCN {}", offsetContext.getScn());
+                return;
+            }
         }
+        else {
+            if (scn >= offsetContext.getScn()) {
+                LOGGER.debug("Ignoring change event with already processed SCN {}", scn);
+                LOGGER.debug("Ignoring change event with already processed, original SCN {}", offsetContext.getScn());
+                return;
+            }
+        }
+        
 
         offsetContext.setScn(scn);
         offsetContext.setTransactionId(lcr.getTransactionId());
