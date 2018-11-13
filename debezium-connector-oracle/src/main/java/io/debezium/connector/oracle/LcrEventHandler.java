@@ -61,7 +61,7 @@ class LcrEventHandler implements XStreamLCRCallbackHandler {
             }
         }
         else {
-            if (scn >= offsetContext.getScn()) {
+            if ((offsetContext.getScn() < 0) && scn >= offsetContext.getScn()) {
                 LOGGER.debug("Ignoring change event with already processed SCN {}", scn);
                 LOGGER.debug("Ignoring change event with already processed, original SCN {}", offsetContext.getScn());
                 return;
